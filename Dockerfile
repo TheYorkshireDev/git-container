@@ -1,5 +1,5 @@
 #
-# Container with git installed
+# Container with Git installed
 #
 # (c) 2017 - Steven Cooney
 ########################################################

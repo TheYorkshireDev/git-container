@@ -1,4 +1,4 @@
-# Build using the previous version
+# Build using lightweight docker in docker image
 image: theyorkshiredev/docker-slim:latest
 
 # Since we building docker images within a docker container we need the
@@ -18,6 +18,7 @@ before_script:
   - export TAGGED_IMAGE=$( echo $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_TAG | tr '[:upper:]' '[:lower:]' )
   - export GITHUB_URL=https://TheYorkshireDev:${GITHUB_TOKEN}@github.com/TheYorkshireDev/git-container.git
   - export RELEASE_URL=https://registry.hub.docker.com/u/theyorkshiredev/git-container/trigger/$DOCKERHUB_TOKEN/
+
 
 # Group Docker login commands
 .log_into_docker : &log_into_docker |
@@ -42,14 +43,14 @@ test_installed_apps:
 
 # Lint our Dockerfile
 lint_dockerfile:
-  image: theyorkshiredev/docker-dockerlint:latest
+  image: theyorkshiredev/dockerfile-linter:latest
   stage: test
   script:
     - dockerfilelint Dockerfile
 
 # If the build is on master mirror on GitHub
 github_publish:
-  image: theyorkshiredev/docker-git:latest #TODO: Update Image
+  image: theyorkshiredev/git-container:latest
   stage: publish
   script:
     - echo "Publish to Github."
@@ -69,9 +70,9 @@ publish:
   only:
     - tags
 
-# If the publish to github completed release the image on dockerhub
+# If the publish to github completed, release the image on dockerhub
 dockerhub_release:
-  image: theyorkshiredev/docker-triggerhub:latest #TODO: Update Image
+  image: theyorkshiredev/trigger-dockerhub-build:latest
   stage: release
   script:
     - echo "Release to Dockerhub."

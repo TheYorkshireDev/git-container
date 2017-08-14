@@ -1,6 +1,6 @@
 # Git Container
 
-A small container with git installed.
+A simple container with git installed.
 
 ## Build & Release Status
 
